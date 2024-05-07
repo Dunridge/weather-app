@@ -36,7 +36,7 @@ module.exports = {
 		"no-undef": "off",
 		"no-debugger": "off",
 		"indent": [
-			"error",
+			"warn",
 			"tab"
 		],
 		"linebreak-style": [
