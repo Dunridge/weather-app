@@ -34,6 +34,7 @@ module.exports = {
 		"react/react-in-jsx-scope": "off",
 		"quotes": "off",
 		"no-undef": "off",
+		"no-debugger": "off",
 		"indent": [
 			"error",
 			"tab"
