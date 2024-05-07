@@ -5,7 +5,7 @@ import Header from "./components/header/Header";
 export default function App() {
 
 	useEffect(() => {
-		testGetCurrentWeather();
+		// testGetCurrentWeather();
 	}, []);
 
 	const testGetCurrentWeather = async () => {
@@ -13,7 +13,7 @@ export default function App() {
 		const longitude = 0;
 		const apiKey = process.env.REACT_APP_OPENWEATHER_KEY;
 		const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}`;
-		const endpointUrl = "https://corsproxy.io/?" + encodeURIComponent(url); 
+		const endpointUrl = "https://corsproxy.io/?" + encodeURIComponent(url);
 
 		try {
 			const response = await fetch(endpointUrl,
@@ -24,7 +24,7 @@ export default function App() {
 					},
 				}
 			);
-  
+
 			const data = await response.json();
 			console.log("data", data);
 			debugger;
@@ -35,12 +35,15 @@ export default function App() {
 	};
 
 	return (
-		<>
+		<div className="h-screen flex flex-col">
 			<Header />
-			<div className="text-3xl">
-        Weather App: {process.env.REACT_APP_OPENWEATHER_KEY}
+			<div className="text-3xl flex-grow bg-secondary">
+				<div>Weather App: {process.env.REACT_APP_OPENWEATHER_KEY}</div>
+				<div>Weather App: {process.env.REACT_APP_OPENWEATHER_KEY}</div>
+				<div>Weather App: {process.env.REACT_APP_OPENWEATHER_KEY}</div>
+				<div>Weather App: {process.env.REACT_APP_OPENWEATHER_KEY}</div>
 			</div>
 			<Footer />
-		</>
+		</div>
 	);
 }
