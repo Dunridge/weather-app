@@ -1,22 +1,35 @@
 import { IWeatherResult } from "utils/interfaces/IWeatherResult";
+import WeatherItem from "./WeatherItem";
+import WeatherCardItem from "./WeatherCardItem";
 
 export default function WeatherResultCard({ name, coord, weather, wind, main }: IWeatherResult) {
     // TODO: choose and pick the data fields from the results that you need 
 
 
+    // TODO: add the weather icon 
     return (
         <div className="flex flex-col inline-block rounded-md p-[22px] h-fit w-full bg-complementary">
-            <div className="w-full text-center text-xl font-semibold">{ name }</div>
+            <div className="w-full text-center text-xl font-bold">{name}</div>
             <div className="w-full text-center">(lat: <span>{coord.lat}</span>; lon: <span>{coord.lon}</span>)</div>
-            <div>{ weather.map((item) => (<div key={item.id}>{ item.main }: { item.description }</div>)) }</div>
-            <div>Temperature: { main.temp } (min: { main.temp_min }) (max: { main.temp_max })</div>
-            <div>Feels like: { main.feels_like }</div>
-            <div>Wind speed: { wind.speed }</div>
-            <div>Wind temperature: { wind.deg }</div>
-            <div>Ground level: { main.grnd_level ?? 'NA' }</div>
-            <div>See level: { main.sea_level ?? 'NA' }</div>
-            <div>Humidity: { main.humidity }</div>
-            <div>Pressure: { main.pressure }</div>
+
+            <div className="w-full flex flex-col justify-center items-center">{
+                // TODO: add a component for that 
+                weather.map((item) => (
+                    <WeatherItem key={item.id} description={item.description} main={item.main} icon={item.icon} />
+                ))
+            }</div>
+
+            <div className="w-full text-center">Temperature: {main.temp} (min: {main.temp_min}) (max: {main.temp_max})</div>
+
+            <div className="grid grid-cols-2 mt-[16px]">
+                <WeatherCardItem text="Feels like" data={main.feels_like}/>
+                <WeatherCardItem text="Wind speed" data={wind.speed}/>
+                <WeatherCardItem text="Wind temperature" data={wind.deg}/>
+                <WeatherCardItem text="Ground level" data={main.grnd_level ?? 'NA'}/>
+                <WeatherCardItem text="Sea level" data={main.sea_level ?? 'NA'}/>
+                <WeatherCardItem text="Humidity" data={main.humidity}/>
+                <WeatherCardItem text="Pressure" data={main.pressure}/>
+            </div>
         </div>
     );
 }
