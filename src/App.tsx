@@ -27,6 +27,14 @@ export default function App() {
 		}
 	}, [weatherData]);
 
+	const fetchForecast = async () => {
+		const lat = 33.44;
+		const lon = -94.04;
+
+		getForecastWeather(lat, lon);
+		debugger;
+	};
+
 	const fetchWeather = async (index: string) => {
 		const weatherData: IWeatherResult[] = await getWeatherByIndexOrCity(index);
 		setWeatherData(weatherData);
@@ -110,19 +118,14 @@ export default function App() {
 		return results;
 	};
 
-	const fetchForecast = async () => {
-		const lat = 33.44;
-		const lon = -94.04;
-
-		getForecastWeather(lat, lon);
-		debugger;
-	};
+	
 
 	// TODO: get the forecast weather 
 	const getForecastWeather = async (latitude: number, longitude: number) => {
-		const apiKey = process.env.REACT_APP_GEOCODING_KEY;
-		const fetchUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&appid=${apiKey}`;
-	
+		const apiKey = process.env.REACT_APP_OPENWEATHER_KEY;
+		const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&appid=${apiKey}`;
+		const fetchUrl = "https://corsproxy.io/?" + encodeURIComponent(url);
+
 		try {
 			const response = await fetch(fetchUrl,
 				{
