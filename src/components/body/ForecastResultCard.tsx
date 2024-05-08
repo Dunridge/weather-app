@@ -1,6 +1,6 @@
 import { IForecastResultCardProps } from "utils/interfaces/IForecastResultCardProps";
 
-// TODO: add extra
+// TODO: add extra fields and add styling 
 export default function ForecastResultCard({ description, icon }: IForecastResultCardProps) {
 
     return (

@@ -37,6 +37,7 @@ export interface IDailyForecast {
     dt: number;
     sunrise: number;
     sunset: number;
+    summary: string;
     moonrise?: number;
     moonset?: number;
     moon_phase?: number;

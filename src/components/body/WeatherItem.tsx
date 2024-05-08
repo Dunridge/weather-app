@@ -1,10 +1,4 @@
-import { IWeatherData } from "utils/interfaces/IWeatherData";
-
-export interface IWeatherItemProps {
-    description: string;
-    icon: string;
-    main: string;
-}
+import { IWeatherItemProps } from "utils/interfaces/IWeatherItemProps";
 
 export default function WeatherItem({ icon, description, main }: IWeatherItemProps) {
 

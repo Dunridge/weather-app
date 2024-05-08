@@ -82,7 +82,7 @@ export default function App() {
 		const results: IWeatherLocationResult[] = await getCityOrZipCoordinates(index);
 		const locationGeometries: IWeatherGeometry[] = results.map((match: IWeatherLocationResult) => ({ lat: match.geometry.lat, lng: match.geometry.lng } as IWeatherGeometry));
 		
-		let allForeastData: IForecastResult[] = [];
+		let allForecastData: IForecastResult[] = [];
 
 		try {
 			const weatherPromises = locationGeometries.map(async (geometry: IWeatherGeometry) => {
@@ -90,14 +90,14 @@ export default function App() {
 				const weatherData = await getForecastWeather(lat, lng);
 				return weatherData;
 			});
-			allForeastData = await Promise.all(weatherPromises);
-			
+			allForecastData = await Promise.all(weatherPromises);
+			debugger;
 		} catch (error) {
 			console.error(error);
 			debugger;
 		}
 
-		return allForeastData;
+		return allForecastData;
 	};
 
 	const getCurrentWeather = async (latitude: number, longitude: number) => {

@@ -4,7 +4,7 @@ import WeatherResultCard from "./WeatherCard";
 import { IWeatherResult } from "utils/interfaces/IWeatherResult";
 import { WeatherType } from "utils/enums/WeatherType";
 import ForecastResultCard from "./ForecastResultCard";
-import { IForecastResult } from "utils/interfaces/IForecastResult";
+import { IDailyForecast, IForecastResult } from "utils/interfaces/IForecastResult";
 
 export default function LocationSearch({ location, setLocation, fetchWeather, fetchForecast, weatherData, forecastData, weatherType }: ILocationSearchProps) {
 
@@ -57,7 +57,7 @@ export default function LocationSearch({ location, setLocation, fetchWeather, fe
                 ) : (
                     <>
                         <div>
-                            { forecastData.map((item: IForecastResult) => <ForecastResultCard key={item.lat} description={item.current.weather[0].description} icon={item.current.weather[0].icon}/>) }
+                            { forecastData[0].daily.map((item: IDailyForecast) => <ForecastResultCard key={item.dt} description={item.summary} icon=""/>) }
                             {/* {JSON.stringify(forecastData)} */}
                         </div>
                     </>
