@@ -1,18 +1,20 @@
 import { useEffect } from "react";
 import { WeatherType } from "utils/enums/WeatherType";
-import { IDailyForecast } from "utils/interfaces/IDailyForecast";
+import { IForecastResult } from "utils/interfaces/IForecastResult";
 import { ILocationSearchProps } from "utils/interfaces/ILocationSearchProps";
 import { IWeatherResult } from "utils/interfaces/IWeatherResult";
-import ForecastResultCard from "./ForecastResultCard";
 import WeatherResultCard from "./WeatherCard";
+import ForecastContainer from "./ForecastContainer";
 
 export default function LocationSearch({ location, setLocation, fetchWeather, fetchForecast, weatherData, forecastData, weatherType }: ILocationSearchProps) {
+
     useEffect(() => {
-        console.log(weatherType);
-        debugger;
+        if (forecastData.length !== 0) {
+            console.log(forecastData);
+            debugger;
+        }
 
-    }, [weatherType]);
-
+    }, [forecastData]);
 
     const onGetCurrentWeather = () => {
         fetchWeather(location);
@@ -46,17 +48,13 @@ export default function LocationSearch({ location, setLocation, fetchWeather, fe
 
             {
                 weatherType === WeatherType.CurrentWeather ? (
-                    <>
-                        <div className="grid grid-cols-2 gap-[20px] mt-[40px]">
-                            {weatherData.map((data: IWeatherResult) => <WeatherResultCard key={data.id} {...data} />)}
-                        </div>
-                    </>
+                    <div className="grid grid-cols-2 gap-[20px] mt-[40px]">
+                        {weatherData.map((data: IWeatherResult) => <WeatherResultCard key={data.id} {...data} />)}
+                    </div>
                 ) : (
-                    <>
-                        <div>
-                            { forecastData[0].daily.map((item: IDailyForecast) => <ForecastResultCard key={item.dt} description={item.summary} icon=""/>) }
-                        </div>
-                    </>
+                    <div className="grid grid-cols-1 gap-[20px] mt-[40px]">
+                        {forecastData.map((item: IForecastResult) => <ForecastContainer key={item.timezone} {...item} />)}
+                    </div>
                 )
             }
         </div>

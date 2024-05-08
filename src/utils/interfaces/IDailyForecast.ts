@@ -1,3 +1,5 @@
+import { IDailyFeelsLike } from "./IDailyFeelsLike";
+import { IDailyTemp } from "./IDailyTemp";
 import { IWeather } from "./IWeather";
 
 export interface IDailyForecast {
@@ -8,20 +10,8 @@ export interface IDailyForecast {
     moonrise?: number;
     moonset?: number;
     moon_phase?: number;
-    temp: {
-        day: number;
-        min: number;
-        max: number;
-        night: number;
-        eve: number;
-        morn: number;
-    };
-    feels_like: {
-        day: number;
-        night: number;
-        eve: number;
-        morn: number;
-    };
+    temp: IDailyTemp;
+    feels_like: IDailyFeelsLike;
     pressure: number;
     humidity: number;
     dew_point: number;

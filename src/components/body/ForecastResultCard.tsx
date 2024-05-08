@@ -4,7 +4,7 @@ import { IForecastResultCardProps } from "utils/interfaces/IForecastResultCardPr
 export default function ForecastResultCard({ description, icon }: IForecastResultCardProps) {
 
     return (
-        <div>
+        <div className="">
             <img src={`https://openweathermap.org/img/wn/${icon}@2x.png`} alt="" />
             { description }
         </div>

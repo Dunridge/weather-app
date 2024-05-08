@@ -78,7 +78,6 @@ export default function App() {
 	};
 
 	const getForecastByIndexOrCity = async (index: string): Promise<IForecastResult[]> => {
-		debugger;
 		const results: IWeatherLocationResult[] = await getCityOrZipCoordinates(index);
 		const locationGeometries: IWeatherGeometry[] = results.map((match: IWeatherLocationResult) => ({ lat: match.geometry.lat, lng: match.geometry.lng } as IWeatherGeometry));
 		
@@ -145,7 +144,6 @@ export default function App() {
 			);
 
 			const data = await response.json();
-			debugger;
 			results = data.results;
 		} catch (error) {
 			console.error(error);
