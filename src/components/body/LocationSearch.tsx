@@ -4,13 +4,12 @@ import { ILocationSearchProps } from "utils/interfaces/ILocationSearchProps";
 export default function LocationSearch({ location, setLocation, fetchWeather, weatherData }: ILocationSearchProps) {
 
     const onGetCurrentWeather = () => {
-        console.log(location); // index for now - TODO: add the ability to get the weather by city name
         fetchWeather(location);
         debugger;
     };
 
     const onLocationUpdate = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = +e.target.value;
+        const value = e.target.value;
         setLocation(value);
     };
 

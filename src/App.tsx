@@ -7,13 +7,18 @@ import { IWeatherGeometry } from "utils/interfaces/IWeatherGeometry";
 import { IWeatherResult } from "utils/interfaces/IWeatherResult";
 
 export default function App() {
-    const [location, setLocation] = useState(0);
+    const [location, setLocation] = useState('');
 	const [weatherData, setWeatherData] = useState<IWeatherResult[]>([]);
 
 	useEffect(() => {
 		// const index = 94107; // TODO: test this with the city name
 		// fetchWeather(index);
+		// test(); // this works and it accepts text for the city too 
 	}, []);
+
+	// const test = async () => {
+	// 	getCityOrZipCoordinates(94107);
+	// };
 
 	useEffect(() => {
 		if (weatherData.length !== 0) {
@@ -22,13 +27,13 @@ export default function App() {
 		}
 	}, [weatherData]);
 
-	const fetchWeather = async (index: number) => {
+	const fetchWeather = async (index: string) => {
 		const weatherData: IWeatherResult[] = await getWeatherByIndexOrCity(index);
 		setWeatherData(weatherData);
 	};
 
 	// TODO: test it with a city name to see if it works without modifications
-	const getWeatherByIndexOrCity = async (index: number): Promise<IWeatherResult[]> => {
+	const getWeatherByIndexOrCity = async (index: string): Promise<IWeatherResult[]> => {
 		const results: IWeatherLocationResult[] = await getCityOrZipCoordinates(index);
 		const locationGeometries: IWeatherGeometry[] = results.map((match: IWeatherLocationResult) => ({ lat: match.geometry.lat, lng: match.geometry.lng } as IWeatherGeometry));
 
@@ -76,10 +81,10 @@ export default function App() {
 		return currentWeather;
 	};
 
-	const getCityOrZipCoordinates = async (index: number): Promise<IWeatherLocationResult[]> => {
+	// TODO: test to retreive the coordinates by the city name 
+	const getCityOrZipCoordinates = async (indexOrCity: string): Promise<IWeatherLocationResult[]> => {
 		const apiKey = process.env.REACT_APP_GEOCODING_KEY;
-		const requestUrl = `https://api.opencagedata.com/geocode/v1/json?q=${index}&key=${apiKey}`;
-
+		const requestUrl = `https://api.opencagedata.com/geocode/v1/json?q=${indexOrCity}&key=${apiKey}`;
 		let results: IWeatherLocationResult[] = [];
 
 		try {
@@ -94,6 +99,7 @@ export default function App() {
 			);
 
 			const data = await response.json();
+			debugger;
 			results = data.results;
 		} catch (error) {
 			console.error(error);
