@@ -1,12 +1,7 @@
-import { IDailyForecast } from "utils/interfaces/IDailyForecast";
-import { IForecastResult } from "utils/interfaces/IForecastResult";
-import ForecastResultCard from "./ForecastResultCard";
 import { useEffect, useState } from "react";
-
-export interface IForecastContainerProps {
-    result: IForecastResult;
-    getCityByCoordinates: (latitude: number, longitude: number) => Promise<string>;
-}
+import { IDailyForecast } from "utils/interfaces/IDailyForecast";
+import { IForecastContainerProps } from "utils/interfaces/IForecastContainerProps";
+import ForecastResultCard from "./ForecastResultCard";
 
 export default function ForecastContainer({ result: { daily, lat, lon }, getCityByCoordinates }: IForecastContainerProps) {
     const [city, setCity] = useState('');
@@ -24,7 +19,6 @@ export default function ForecastContainer({ result: { daily, lat, lon }, getCity
         const city = await getCityByCoordinates(lat, lon);
         setCity(city);
     };
-
 
     return (
         <div className="rounded-md p-[22px] h-fit w-full bg-complementary">
