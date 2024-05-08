@@ -1,41 +1,24 @@
 
-// TODO: split into mulltiple interfaces
+import { IWeatherClouds } from "./IWeatherClouds";
+import { IWeatherCoord } from "./IWeatherCoord";
+import { IWeatherData } from "./IWeatherData";
+import { IWeatherMain } from "./IWeatherMain";
+import { IWeatherSys } from "./IWeatherSys";
+import { IWeatherWind } from "./IWeatherWind";
+// TODO: create a component and pass all the data there  
+
 export interface IWeatherResult {
     base: string;
-    clouds: { all: number }
+    clouds: IWeatherClouds;
     cod: number;
-    coord: { lon: number, lat: number }
+    coord: IWeatherCoord;
     dt: number;
     id: number;
-    main: {
-        feels_like: number,
-        grnd_level: number,
-        humidity: number,
-        pressure: number,
-        sea_level: number,
-        temp: number,
-        temp_max: number,
-        temp_min: number,
-    }
-    name: string,
-    sys: {
-        type: number, 
-        id: number, 
-        country: string, 
-        sunrise: number, 
-        sunset: number
-    }
+    main: IWeatherMain;
+    name: string;
+    sys: IWeatherSys;
     timezone: number,
     visibility: number,
-    weather: {
-        description: string,
-        icon: string,
-        id: number,
-        main: string
-    },
-    wind: {
-        deg: number
-        gust: number,
-        speed: number
-    }
+    weather: IWeatherData;
+    wind: IWeatherWind;
 }

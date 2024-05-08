@@ -47,8 +47,10 @@ export default function App() {
 			});
 			// TODO: add an interface
 			allWeatherData = await Promise.all(weatherPromises);
+			debugger;
 		} catch (error) {
 			console.error(error);
+			debugger;
 		}
 
 		return allWeatherData;
