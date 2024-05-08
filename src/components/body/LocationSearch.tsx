@@ -1,9 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ILocationSearchProps } from "utils/interfaces/ILocationSearchProps";
 import WeatherResultCard from "./WeatherCard";
 import { IWeatherResult } from "utils/interfaces/IWeatherResult";
+import { WeatherType } from "utils/enums/WeatherType";
+import ForecastResultCard from "./ForecastResultCard";
+import { IForecastResult } from "utils/interfaces/IForecastResult";
 
-export default function LocationSearch({ location, setLocation, fetchWeather, fetchForecast,  weatherData, forecastData }: ILocationSearchProps) {
+export default function LocationSearch({ location, setLocation, fetchWeather, fetchForecast, weatherData, forecastData, weatherType }: ILocationSearchProps) {
+
+
+    useEffect(() => {
+        console.log(weatherType);
+        debugger;
+
+    }, [weatherType]);
+
 
     const onGetCurrentWeather = () => {
         fetchWeather(location);
@@ -35,14 +46,23 @@ export default function LocationSearch({ location, setLocation, fetchWeather, fe
                 </div>
             </div>
 
-            {/* TODO: display one or the other, pass a boolean */}
-            <div className="grid grid-cols-2 gap-[20px] mt-[40px]">
-                {weatherData.map((data: IWeatherResult) => <WeatherResultCard key={data.id} {...data} />)}
-            </div>
-
-            <div>
-                { JSON.stringify(forecastData) }
-            </div>
+            <div>{ weatherType }</div>
+            {
+                weatherType === WeatherType.CurrentWeather ? (
+                    <>
+                        <div className="grid grid-cols-2 gap-[20px] mt-[40px]">
+                            {weatherData.map((data: IWeatherResult) => <WeatherResultCard key={data.id} {...data} />)}
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div>
+                            { forecastData.map((item: IForecastResult) => <ForecastResultCard key={item.lat} description={item.current.weather[0].description} icon={item.current.weather[0].icon}/>) }
+                            {/* {JSON.stringify(forecastData)} */}
+                        </div>
+                    </>
+                )
+            }
         </div>
     );
 }

@@ -6,11 +6,14 @@ import { IWeatherLocationResult } from "utils/interfaces/IWeatherLocationResult"
 import { IWeatherGeometry } from "utils/interfaces/IWeatherGeometry";
 import { IWeatherResult } from "utils/interfaces/IWeatherResult";
 import { IForecastResult } from "utils/interfaces/IForecastResult";
+import { WeatherType } from "utils/enums/WeatherType";
 
 export default function App() {
-    const [location, setLocation] = useState('');
+	// TODO: set temporary index for now 
+    const [location, setLocation] = useState('94107');
 	const [weatherData, setWeatherData] = useState<IWeatherResult[]>([]);
 	const [forecastData, setForecastData] = useState<IForecastResult[]>([]);
+    const [weatherType, setWeatherType] = useState(WeatherType.CurrentWeather);
 
 	useEffect(() => {
 		// const index = 94107; // TODO: test this with the city name
@@ -41,11 +44,13 @@ export default function App() {
 	const fetchForecast = async (index: string) => {
 		const forecastData = await getForecastByIndexOrCity(index);
 		setForecastData(forecastData);
+		setWeatherType(WeatherType.ForecastWeather);
 	};
 
 	const fetchWeather = async (index: string) => {
 		const weatherData: IWeatherResult[] = await getWeatherByIndexOrCity(index);
 		setWeatherData(weatherData);
+		setWeatherType(WeatherType.CurrentWeather);
 	};
 
 	// TODO: test it with a city name to see if it works without modifications
@@ -189,6 +194,7 @@ export default function App() {
 								fetchForecast={fetchForecast}
 								weatherData={weatherData}
 								forecastData={forecastData}
+								weatherType={weatherType}
 								/>
 			</div>
 			<Footer />

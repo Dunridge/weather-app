@@ -1,3 +1,4 @@
+import { WeatherType } from "utils/enums/WeatherType";
 import { IForecastResult } from "./IForecastResult";
 import { IWeatherResult } from "./IWeatherResult";
 
@@ -8,4 +9,5 @@ export interface ILocationSearchProps {
     fetchForecast: (index: string) => any;
     weatherData: IWeatherResult[];
     forecastData: IForecastResult[];
+    weatherType: WeatherType;
 }
