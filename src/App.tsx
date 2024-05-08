@@ -1,19 +1,67 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Footer from "./components/Footer";
 import Header from "./components/header/Header";
+import LocationSearch from "components/body/LocationSearch";
+import { IWeatherLocationResult } from "utils/interfaces/IWeatherLocationResult";
+import { IWeatherGeometry } from "utils/interfaces/IWeatherGeometry";
+import { IWeatherResult } from "utils/interfaces/IWeatherResult";
 
 export default function App() {
+    const [location, setLocation] = useState('');
+	const [weatherData, setWeatherData] = useState<IWeatherResult[]>([]);
 
 	useEffect(() => {
-		// testGetCurrentWeather();
+		// const index = 94107; // TODO: test this with the city name
+		// fetchWeather(index);
+		// test(); // this works and it accepts text for the city too 
 	}, []);
 
-	const testGetCurrentWeather = async () => {
-		const latitude = 0;
-		const longitude = 0;
+	// const test = async () => {
+	// 	getCityOrZipCoordinates(94107);
+	// };
+
+	useEffect(() => {
+		if (weatherData.length !== 0) {
+			console.log("All Weather Data:", weatherData);
+			debugger;
+		}
+	}, [weatherData]);
+
+	const fetchWeather = async (index: string) => {
+		const weatherData: IWeatherResult[] = await getWeatherByIndexOrCity(index);
+		setWeatherData(weatherData);
+	};
+
+	// TODO: test it with a city name to see if it works without modifications
+	const getWeatherByIndexOrCity = async (index: string): Promise<IWeatherResult[]> => {
+		const results: IWeatherLocationResult[] = await getCityOrZipCoordinates(index);
+		const locationGeometries: IWeatherGeometry[] = results.map((match: IWeatherLocationResult) => ({ lat: match.geometry.lat, lng: match.geometry.lng } as IWeatherGeometry));
+
+		let allWeatherData: IWeatherResult[] = [];
+
+		try {
+			const weatherPromises = locationGeometries.map(async (geometry: IWeatherGeometry) => {
+				const { lat, lng } = geometry;
+				const weatherData = await getCurrentWeather(lat, lng);
+				return weatherData;
+			});
+			// TODO: add an interface
+			allWeatherData = await Promise.all(weatherPromises);
+			debugger;
+		} catch (error) {
+			console.error(error);
+			debugger;
+		}
+
+		return allWeatherData;
+	};
+
+	const getCurrentWeather = async (latitude: number, longitude: number) => {
 		const apiKey = process.env.REACT_APP_OPENWEATHER_KEY;
 		const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}`;
 		const endpointUrl = "https://corsproxy.io/?" + encodeURIComponent(url);
+
+		let currentWeather = {} as IWeatherResult;
 
 		try {
 			const response = await fetch(endpointUrl,
@@ -25,23 +73,52 @@ export default function App() {
 				}
 			);
 
-			const data = await response.json();
+			const data: IWeatherResult = await response.json();
+			currentWeather = data;
 			console.log("data", data);
-			debugger;
 		} catch (error) {
 			console.error(error);
-			debugger;
 		}
+
+		return currentWeather;
+	};
+
+	// TODO: test to retreive the coordinates by the city name 
+	const getCityOrZipCoordinates = async (indexOrCity: string): Promise<IWeatherLocationResult[]> => {
+		const apiKey = process.env.REACT_APP_GEOCODING_KEY;
+		const requestUrl = `https://api.opencagedata.com/geocode/v1/json?q=${indexOrCity}&key=${apiKey}`;
+		let results: IWeatherLocationResult[] = [];
+
+		try {
+			const response = await fetch(requestUrl,
+				{
+					mode: "cors",
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+					},
+				}
+			);
+
+			const data = await response.json();
+			debugger;
+			results = data.results;
+		} catch (error) {
+			console.error(error);
+		}
+
+		return results;
 	};
 
 	return (
-		<div className="h-screen flex flex-col">
+		<div className="h-full flex flex-col bg-secondary">
 			<Header />
-			<div className="text-3xl flex-grow bg-secondary">
-				<div>Weather App: {process.env.REACT_APP_OPENWEATHER_KEY}</div>
-				<div>Weather App: {process.env.REACT_APP_OPENWEATHER_KEY}</div>
-				<div>Weather App: {process.env.REACT_APP_OPENWEATHER_KEY}</div>
-				<div>Weather App: {process.env.REACT_APP_OPENWEATHER_KEY}</div>
+			<div className="flex-grow bg-secondary px-[40px] pt-[60px] pb-[120px]">
+				<LocationSearch location={location} 
+								setLocation={setLocation}
+								fetchWeather={fetchWeather}
+								weatherData={weatherData}
+								/>
 			</div>
 			<Footer />
 		</div>
