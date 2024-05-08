@@ -110,6 +110,38 @@ export default function App() {
 		return results;
 	};
 
+	const fetchForecast = async () => {
+		const lat = 33.44;
+		const lon = -94.04;
+
+		getForecastWeather(lat, lon);
+		debugger;
+	};
+
+	// TODO: get the forecast weather 
+	const getForecastWeather = async (latitude: number, longitude: number) => {
+		const apiKey = process.env.REACT_APP_GEOCODING_KEY;
+		const fetchUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&appid=${apiKey}`;
+	
+		try {
+			const response = await fetch(fetchUrl,
+				{
+					mode: "cors",
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+					},
+				}
+			);
+
+			const data = await response.json();
+			debugger;
+		} catch (error) {
+			console.error(error);
+			debugger;
+		}
+	};
+
 	return (
 		<div className="h-screen flex flex-col bg-secondary">
 			<Header />
@@ -117,6 +149,7 @@ export default function App() {
 				<LocationSearch location={location} 
 								setLocation={setLocation}
 								fetchWeather={fetchWeather}
+								fetchForecast={fetchForecast}
 								weatherData={weatherData}
 								/>
 			</div>

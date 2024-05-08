@@ -3,11 +3,15 @@ import { ILocationSearchProps } from "utils/interfaces/ILocationSearchProps";
 import WeatherResultCard from "./WeatherCard";
 import { IWeatherResult } from "utils/interfaces/IWeatherResult";
 
-export default function LocationSearch({ location, setLocation, fetchWeather, weatherData }: ILocationSearchProps) {
+export default function LocationSearch({ location, setLocation, fetchWeather, fetchForecast,  weatherData }: ILocationSearchProps) {
 
     const onGetCurrentWeather = () => {
         fetchWeather(location);
         debugger;
+    };
+
+    const onGetForecast = () => {
+        fetchForecast();
     };
 
     const onLocationUpdate = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,7 +30,8 @@ export default function LocationSearch({ location, setLocation, fetchWeather, we
                     <div className="flex w-[400px] gap-[6px] my-[12px]">
                         <input className="border border-solid border-gray-200 w-full h-[46px] px-[12px] py-[2px] rounded-xl focus:border-gray-800 focus:outline-none focus:ring-0" type="text" value={location} onChange={onLocationUpdate} />
                     </div>
-                    <button className="w-[140px] h-[40px] ml-[10px] bg-tertiary rounded-md py-[6px]" onClick={onGetCurrentWeather}>Get forecast</button>
+                    <button className="w-fit h-[40px] ml-[10px] bg-tertiary rounded-md py-[6px] px-[12px]" onClick={onGetCurrentWeather}>Get current weather</button>
+                    <button className="w-fit h-[40px] ml-[10px] bg-tertiary rounded-md py-[6px] px-[12px]" onClick={onGetForecast}>Get forecast</button>
                 </div>
             </div>
 
