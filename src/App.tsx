@@ -111,15 +111,14 @@ export default function App() {
 	};
 
 	return (
-		<div className="h-screen flex flex-col">
+		<div className="h-full flex flex-col bg-secondary">
 			<Header />
-			<div className="flex-grow bg-secondary px-[40px] py-[20px]">
+			<div className="flex-grow bg-secondary px-[40px] pt-[60px] pb-[120px]">
 				<LocationSearch location={location} 
 								setLocation={setLocation}
 								fetchWeather={fetchWeather}
 								weatherData={weatherData}
 								/>
-				{/* <div>Weather App: {process.env.REACT_APP_OPENWEATHER_KEY}</div> */}
 			</div>
 			<Footer />
 		</div>
