@@ -111,7 +111,7 @@ export default function App() {
 	};
 
 	return (
-		<div className="h-full flex flex-col bg-secondary">
+		<div className="h-screen flex flex-col bg-secondary">
 			<Header />
 			<div className="flex-grow bg-secondary px-[40px] pt-[60px] pb-[120px]">
 				<LocationSearch location={location} 
