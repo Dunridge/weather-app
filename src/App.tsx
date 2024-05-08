@@ -7,10 +7,12 @@ import { IWeatherGeometry } from "utils/interfaces/IWeatherGeometry";
 import { IWeatherResult } from "utils/interfaces/IWeatherResult";
 
 export default function App() {
+    const [location, setLocation] = useState(0);
 	const [weatherData, setWeatherData] = useState<IWeatherResult[]>([]);
 
 	useEffect(() => {
-		fetchWeather();
+		// const index = 94107; // TODO: test this with the city name
+		// fetchWeather(index);
 	}, []);
 
 	useEffect(() => {
@@ -20,8 +22,7 @@ export default function App() {
 		}
 	}, [weatherData]);
 
-	const fetchWeather = async () => {
-		const index = 94107; // TODO: test this with the city name
+	const fetchWeather = async (index: number) => {
 		const weatherData: IWeatherResult[] = await getWeatherByIndexOrCity(index);
 		setWeatherData(weatherData);
 	};
@@ -105,7 +106,11 @@ export default function App() {
 		<div className="h-screen flex flex-col">
 			<Header />
 			<div className="flex-grow bg-secondary px-[40px] py-[20px]">
-				<LocationSearch getCurrentWeather={getCurrentWeather} />
+				<LocationSearch location={location} 
+								setLocation={setLocation}
+								fetchWeather={fetchWeather}
+								weatherData={weatherData}
+								/>
 				{/* <div>Weather App: {process.env.REACT_APP_OPENWEATHER_KEY}</div> */}
 			</div>
 			<Footer />

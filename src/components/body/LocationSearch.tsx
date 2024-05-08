@@ -1,20 +1,16 @@
 import { useState } from "react";
 import { ILocationSearchProps } from "utils/interfaces/ILocationSearchProps";
 
-export default function LocationSearch({ getCurrentWeather }: ILocationSearchProps) {
-    const [location, setLocation] = useState('');
+export default function LocationSearch({ location, setLocation, fetchWeather, weatherData }: ILocationSearchProps) {
 
     const onGetCurrentWeather = () => {
-        console.log(location);
+        console.log(location); // index for now - TODO: add the ability to get the weather by city name
+        fetchWeather(location);
         debugger;
-
-        // TODO: find out wheather this API offers weather by city / zip
-        //  -- if not then get the location of the city or zip 
-        // getCurrentWeather(0, 0);
     };
 
     const onLocationUpdate = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
+        const value = +e.target.value;
         setLocation(value);
     };
 
@@ -26,7 +22,8 @@ export default function LocationSearch({ getCurrentWeather }: ILocationSearchPro
             </div>
 
             <button className="w-[140px] bg-tertiary rounded-md py-[6px]" onClick={onGetCurrentWeather}>Get forecast</button>
-            {/* <div>{location}</div> */}
+
+            <div>{ JSON.stringify(weatherData) }</div>
         </div>
     );
 }

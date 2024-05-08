@@ -1,5 +1,8 @@
 import { IWeatherResult } from "./IWeatherResult";
 
 export interface ILocationSearchProps {
-    getCurrentWeather: (latitude: number, longitude: number) => Promise<IWeatherResult>;
+    location: number; 
+    setLocation: React.Dispatch<React.SetStateAction<number>>;
+    fetchWeather: (index: number) => Promise<void>;
+    weatherData: IWeatherResult[];
 }
