@@ -18,14 +18,16 @@ export default function App() {
 	useEffect(() => {
 		// const index = 94107; // TODO: test this with the city name
 		// fetchWeather(index);
-		// test(); // this works and it accepts text for the city too 
-
-
+		test(); // this works and it accepts text for the city too 
 	}, []);
 
-	// const test = async () => {
-	// 	getCityOrZipCoordinates(94107);
-	// };
+	const test = async () => {
+		// getCityOrZipCoordinates(94107);
+		const latitude = 0;
+		const longitude = 0;
+		const city = await getCityByCoordinates(latitude, longitude);
+		debugger;
+	};
 
 	useEffect(() => {
 		if (weatherData.length !== 0) {
@@ -126,6 +128,32 @@ export default function App() {
 		return currentWeather;
 	};
 
+	const getCityByCoordinates = async (latitude: number, longitude: number): Promise<string> => {
+		const apiKey = process.env.REACT_APP_GEOCODING_KEY;
+		const requestUrl = `https://api.opencagedata.com/geocode/v1/json?q=${latitude},${longitude}&pretty=1&key=${apiKey}`;
+		let result: any;
+
+		try {
+			const response = await fetch(requestUrl,
+				{
+					mode: "cors",
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+					},
+				}
+			);
+
+			const data = await response.json();
+			debugger;
+			result = data.results[0].formatted;
+		} catch (error) {
+			console.error(error);
+		}
+
+		return result;
+	};
+
 	// TODO: test to retreive the coordinates by the city name 
 	const getCityOrZipCoordinates = async (indexOrCity: string): Promise<IWeatherLocationResult[]> => {
 		const apiKey = process.env.REACT_APP_GEOCODING_KEY;
@@ -173,6 +201,7 @@ export default function App() {
 
 			const data = await response.json();
 			currentWeather = data;
+			debugger;
 		} catch (error) {
 			console.error(error);
 		}
@@ -191,6 +220,7 @@ export default function App() {
 								weatherData={weatherData}
 								forecastData={forecastData}
 								weatherType={weatherType}
+								getCityByCoordinates={getCityByCoordinates}
 								/>
 			</div>
 			<Footer />

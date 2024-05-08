@@ -7,6 +7,7 @@ export interface ILocationSearchProps {
     setLocation: React.Dispatch<React.SetStateAction<string>>;
     fetchWeather: (index: string) => Promise<void>;
     fetchForecast: (index: string) => any;
+    getCityByCoordinates: (latitude: number, longitude: number) => Promise<string>;
     weatherData: IWeatherResult[];
     forecastData: IForecastResult[];
     weatherType: WeatherType;
