@@ -5,7 +5,6 @@ import { IWeatherData } from "./IWeatherData";
 import { IWeatherMain } from "./IWeatherMain";
 import { IWeatherSys } from "./IWeatherSys";
 import { IWeatherWind } from "./IWeatherWind";
-// TODO: create a component and pass all the data there  
 
 export interface IWeatherResult {
     base: string;
@@ -19,6 +18,6 @@ export interface IWeatherResult {
     sys: IWeatherSys;
     timezone: number,
     visibility: number,
-    weather: IWeatherData;
+    weather: IWeatherData[];
     wind: IWeatherWind;
 }
