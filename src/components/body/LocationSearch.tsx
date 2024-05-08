@@ -1,14 +1,12 @@
-import { useEffect, useState } from "react";
-import { ILocationSearchProps } from "utils/interfaces/ILocationSearchProps";
-import WeatherResultCard from "./WeatherCard";
-import { IWeatherResult } from "utils/interfaces/IWeatherResult";
+import { useEffect } from "react";
 import { WeatherType } from "utils/enums/WeatherType";
+import { IDailyForecast } from "utils/interfaces/IDailyForecast";
+import { ILocationSearchProps } from "utils/interfaces/ILocationSearchProps";
+import { IWeatherResult } from "utils/interfaces/IWeatherResult";
 import ForecastResultCard from "./ForecastResultCard";
-import { IDailyForecast, IForecastResult } from "utils/interfaces/IForecastResult";
+import WeatherResultCard from "./WeatherCard";
 
 export default function LocationSearch({ location, setLocation, fetchWeather, fetchForecast, weatherData, forecastData, weatherType }: ILocationSearchProps) {
-
-
     useEffect(() => {
         console.log(weatherType);
         debugger;
@@ -41,12 +39,11 @@ export default function LocationSearch({ location, setLocation, fetchWeather, fe
                     <div className="flex w-[400px] gap-[6px] my-[12px]">
                         <input className="border border-solid border-gray-200 w-full h-[46px] px-[12px] py-[2px] rounded-xl focus:border-gray-800 focus:outline-none focus:ring-0" type="text" value={location} onChange={onLocationUpdate} />
                     </div>
-                    <button className="w-fit h-[40px] ml-[10px] bg-tertiary rounded-md py-[6px] px-[12px]" onClick={onGetCurrentWeather}>Get current weather</button>
-                    <button className="w-fit h-[40px] ml-[10px] bg-tertiary rounded-md py-[6px] px-[12px]" onClick={onGetForecast}>Get forecast</button>
+                    <button className={`w-fit h-[40px] ml-[10px] ${weatherType === WeatherType.CurrentWeather ? 'border border-4 border-solid border-primary-200' : ''} bg-tertiary rounded-md py-[6px] px-[12px]`} onClick={onGetCurrentWeather}>Get current weather</button>
+                    <button className={`w-fit h-[40px] ml-[10px] ${weatherType === WeatherType.ForecastWeather ? 'border border-4 border-solid border-primary-200' : ''} bg-tertiary rounded-md py-[6px] px-[12px]`} onClick={onGetForecast}>Get forecast</button>
                 </div>
             </div>
 
-            <div>{ weatherType }</div>
             {
                 weatherType === WeatherType.CurrentWeather ? (
                     <>
@@ -58,7 +55,6 @@ export default function LocationSearch({ location, setLocation, fetchWeather, fe
                     <>
                         <div>
                             { forecastData[0].daily.map((item: IDailyForecast) => <ForecastResultCard key={item.dt} description={item.summary} icon=""/>) }
-                            {/* {JSON.stringify(forecastData)} */}
                         </div>
                     </>
                 )
