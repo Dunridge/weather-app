@@ -5,15 +5,19 @@ import LocationSearch from "components/body/LocationSearch";
 import { IWeatherLocationResult } from "utils/interfaces/IWeatherLocationResult";
 import { IWeatherGeometry } from "utils/interfaces/IWeatherGeometry";
 import { IWeatherResult } from "utils/interfaces/IWeatherResult";
+import { IForecastResult } from "utils/interfaces/IForecastResult";
 
 export default function App() {
     const [location, setLocation] = useState('');
 	const [weatherData, setWeatherData] = useState<IWeatherResult[]>([]);
+	const [forecastData, setForecastData] = useState<IForecastResult[]>([]);
 
 	useEffect(() => {
 		// const index = 94107; // TODO: test this with the city name
 		// fetchWeather(index);
 		// test(); // this works and it accepts text for the city too 
+
+
 	}, []);
 
 	// const test = async () => {
@@ -27,12 +31,16 @@ export default function App() {
 		}
 	}, [weatherData]);
 
-	const fetchForecast = async () => {
-		const lat = 33.44;
-		const lon = -94.04;
+	useEffect(() => {
+		if (forecastData.length !== 0) {
+			console.log("forecastData", forecastData);
+			debugger;
+		}
+	}, [forecastData]);
 
-		getForecastWeather(lat, lon);
-		debugger;
+	const fetchForecast = async (index: string) => {
+		const forecastData = await getForecastByIndexOrCity(index);
+		setForecastData(forecastData);
 	};
 
 	const fetchWeather = async (index: string) => {
@@ -62,6 +70,29 @@ export default function App() {
 		}
 
 		return allWeatherData;
+	};
+
+	const getForecastByIndexOrCity = async (index: string): Promise<IForecastResult[]> => {
+		debugger;
+		const results: IWeatherLocationResult[] = await getCityOrZipCoordinates(index);
+		const locationGeometries: IWeatherGeometry[] = results.map((match: IWeatherLocationResult) => ({ lat: match.geometry.lat, lng: match.geometry.lng } as IWeatherGeometry));
+		
+		let allForeastData: IForecastResult[] = [];
+
+		try {
+			const weatherPromises = locationGeometries.map(async (geometry: IWeatherGeometry) => {
+				const { lat, lng } = geometry;
+				const weatherData = await getForecastWeather(lat, lng);
+				return weatherData;
+			});
+			allForeastData = await Promise.all(weatherPromises);
+			
+		} catch (error) {
+			console.error(error);
+			debugger;
+		}
+
+		return allForeastData;
 	};
 
 	const getCurrentWeather = async (latitude: number, longitude: number) => {
@@ -118,13 +149,13 @@ export default function App() {
 		return results;
 	};
 
-	
-
 	// TODO: get the forecast weather 
 	const getForecastWeather = async (latitude: number, longitude: number) => {
 		const apiKey = process.env.REACT_APP_OPENWEATHER_KEY;
 		const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&appid=${apiKey}`;
 		const fetchUrl = "https://corsproxy.io/?" + encodeURIComponent(url);
+
+		let currentWeather = {} as any;
 
 		try {
 			const response = await fetch(fetchUrl,
@@ -138,11 +169,14 @@ export default function App() {
 			);
 
 			const data = await response.json();
+			currentWeather = data;
 			debugger;
 		} catch (error) {
 			console.error(error);
 			debugger;
 		}
+
+		return currentWeather;
 	};
 
 	return (
@@ -154,6 +188,7 @@ export default function App() {
 								fetchWeather={fetchWeather}
 								fetchForecast={fetchForecast}
 								weatherData={weatherData}
+								forecastData={forecastData}
 								/>
 			</div>
 			<Footer />

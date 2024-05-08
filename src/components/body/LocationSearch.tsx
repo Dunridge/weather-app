@@ -3,7 +3,7 @@ import { ILocationSearchProps } from "utils/interfaces/ILocationSearchProps";
 import WeatherResultCard from "./WeatherCard";
 import { IWeatherResult } from "utils/interfaces/IWeatherResult";
 
-export default function LocationSearch({ location, setLocation, fetchWeather, fetchForecast,  weatherData }: ILocationSearchProps) {
+export default function LocationSearch({ location, setLocation, fetchWeather, fetchForecast,  weatherData, forecastData }: ILocationSearchProps) {
 
     const onGetCurrentWeather = () => {
         fetchWeather(location);
@@ -11,7 +11,7 @@ export default function LocationSearch({ location, setLocation, fetchWeather, fe
     };
 
     const onGetForecast = () => {
-        fetchForecast();
+        fetchForecast(location);
     };
 
     const onLocationUpdate = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,8 +35,13 @@ export default function LocationSearch({ location, setLocation, fetchWeather, fe
                 </div>
             </div>
 
+            {/* TODO: display one or the other, pass a boolean */}
             <div className="grid grid-cols-2 gap-[20px] mt-[40px]">
                 {weatherData.map((data: IWeatherResult) => <WeatherResultCard key={data.id} {...data} />)}
+            </div>
+
+            <div>
+                { JSON.stringify(forecastData) }
             </div>
         </div>
     );
