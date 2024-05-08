@@ -173,10 +173,8 @@ export default function App() {
 
 			const data = await response.json();
 			currentWeather = data;
-			debugger;
 		} catch (error) {
 			console.error(error);
-			debugger;
 		}
 
 		return currentWeather;

@@ -13,13 +13,3 @@ export interface IForecastResult {
     timezone: string;
     timezone_offset: number;
 }
-
-
-
-
-
-
-
-
-
-
