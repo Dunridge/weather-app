@@ -5,15 +5,22 @@ import LocationSearch from "components/body/LocationSearch";
 import { IWeatherLocationResult } from "utils/interfaces/IWeatherLocationResult";
 import { IWeatherGeometry } from "utils/interfaces/IWeatherGeometry";
 import { IWeatherResult } from "utils/interfaces/IWeatherResult";
+import { IForecastResult } from "utils/interfaces/IForecastResult";
+import { WeatherType } from "utils/enums/WeatherType";
 
 export default function App() {
-    const [location, setLocation] = useState('');
+	// TODO: set temporary index for now 
+    const [location, setLocation] = useState('94107');
 	const [weatherData, setWeatherData] = useState<IWeatherResult[]>([]);
+	const [forecastData, setForecastData] = useState<IForecastResult[]>([]);
+    const [weatherType, setWeatherType] = useState(WeatherType.CurrentWeather);
 
 	useEffect(() => {
 		// const index = 94107; // TODO: test this with the city name
 		// fetchWeather(index);
 		// test(); // this works and it accepts text for the city too 
+
+
 	}, []);
 
 	// const test = async () => {
@@ -27,9 +34,23 @@ export default function App() {
 		}
 	}, [weatherData]);
 
+	useEffect(() => {
+		if (forecastData.length !== 0) {
+			console.log("forecastData", forecastData);
+			debugger;
+		}
+	}, [forecastData]);
+
+	const fetchForecast = async (index: string) => {
+		const forecastData = await getForecastByIndexOrCity(index);
+		setForecastData(forecastData);
+		setWeatherType(WeatherType.ForecastWeather);
+	};
+
 	const fetchWeather = async (index: string) => {
 		const weatherData: IWeatherResult[] = await getWeatherByIndexOrCity(index);
 		setWeatherData(weatherData);
+		setWeatherType(WeatherType.CurrentWeather);
 	};
 
 	// TODO: test it with a city name to see if it works without modifications
@@ -54,6 +75,28 @@ export default function App() {
 		}
 
 		return allWeatherData;
+	};
+
+	const getForecastByIndexOrCity = async (index: string): Promise<IForecastResult[]> => {
+		const results: IWeatherLocationResult[] = await getCityOrZipCoordinates(index);
+		const locationGeometries: IWeatherGeometry[] = results.map((match: IWeatherLocationResult) => ({ lat: match.geometry.lat, lng: match.geometry.lng } as IWeatherGeometry));
+		
+		let allForecastData: IForecastResult[] = [];
+
+		try {
+			const weatherPromises = locationGeometries.map(async (geometry: IWeatherGeometry) => {
+				const { lat, lng } = geometry;
+				const weatherData = await getForecastWeather(lat, lng);
+				return weatherData;
+			});
+			allForecastData = await Promise.all(weatherPromises);
+			debugger;
+		} catch (error) {
+			console.error(error);
+			debugger;
+		}
+
+		return allForecastData;
 	};
 
 	const getCurrentWeather = async (latitude: number, longitude: number) => {
@@ -101,13 +144,40 @@ export default function App() {
 			);
 
 			const data = await response.json();
-			debugger;
 			results = data.results;
 		} catch (error) {
 			console.error(error);
 		}
 
 		return results;
+	};
+
+	// TODO: get the forecast weather 
+	const getForecastWeather = async (latitude: number, longitude: number) => {
+		const apiKey = process.env.REACT_APP_OPENWEATHER_KEY;
+		const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&appid=${apiKey}`;
+		const fetchUrl = "https://corsproxy.io/?" + encodeURIComponent(url);
+
+		let currentWeather = {} as any;
+
+		try {
+			const response = await fetch(fetchUrl,
+				{
+					mode: "cors",
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+					},
+				}
+			);
+
+			const data = await response.json();
+			currentWeather = data;
+		} catch (error) {
+			console.error(error);
+		}
+
+		return currentWeather;
 	};
 
 	return (
@@ -117,7 +187,10 @@ export default function App() {
 				<LocationSearch location={location} 
 								setLocation={setLocation}
 								fetchWeather={fetchWeather}
+								fetchForecast={fetchForecast}
 								weatherData={weatherData}
+								forecastData={forecastData}
+								weatherType={weatherType}
 								/>
 			</div>
 			<Footer />
