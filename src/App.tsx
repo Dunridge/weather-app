@@ -14,18 +14,20 @@ export default function App() {
 	const [weatherData, setWeatherData] = useState<IWeatherResult[]>([]);
 	const [forecastData, setForecastData] = useState<IForecastResult[]>([]);
     const [weatherType, setWeatherType] = useState(WeatherType.CurrentWeather);
+	const [currentLocationWeather, setCurrentLocationWeather] = useState<IWeatherResult>({} as IWeatherResult);
 
 	useEffect(() => {
 		// const index = 94107; // TODO: test this with the city name
 		// fetchWeather(index);
-		test(); // this works and it accepts text for the city too 
+		runOnLoad(); // this works and it accepts text for the city too 
 	}, []);
 
-	const test = async () => {
+	const runOnLoad = async () => {
 		// getCityOrZipCoordinates(94107);
-		const latitude = 0;
-		const longitude = 0;
-		const city = await getCityByCoordinates(latitude, longitude);
+		// const latitude = 0;
+		// const longitude = 0;
+		// const city = await getCityByCoordinates(latitude, longitude);
+		fetchCurrentLocationWeather();
 		debugger;
 	};
 
@@ -55,7 +57,19 @@ export default function App() {
 		setWeatherType(WeatherType.CurrentWeather);
 	};
 
-	// TODO: test it with a city name to see if it works without modifications
+	const fetchCurrentLocationWeather = async () => {
+		navigator.geolocation.getCurrentPosition(async (data) => {
+			const latitude = data.coords.latitude;
+			const longitude = data.coords.longitude;
+			const city = await getCityByCoordinates(latitude, longitude);
+			const weatherData: IWeatherResult[] = await getWeatherByIndexOrCity(city);
+			const currentLocation = weatherData[0];
+			setCurrentLocationWeather(currentLocation);
+		}, (error) => {
+			console.error(error); 
+		});
+	};
+
 	const getWeatherByIndexOrCity = async (index: string): Promise<IWeatherResult[]> => {
 		const results: IWeatherLocationResult[] = await getCityOrZipCoordinates(index);
 		const locationGeometries: IWeatherGeometry[] = results.map((match: IWeatherLocationResult) => ({ lat: match.geometry.lat, lng: match.geometry.lng } as IWeatherGeometry));
@@ -154,7 +168,6 @@ export default function App() {
 		return result;
 	};
 
-	// TODO: test to retreive the coordinates by the city name 
 	const getCityOrZipCoordinates = async (indexOrCity: string): Promise<IWeatherLocationResult[]> => {
 		const apiKey = process.env.REACT_APP_GEOCODING_KEY;
 		const requestUrl = `https://api.opencagedata.com/geocode/v1/json?q=${indexOrCity}&key=${apiKey}`;
@@ -180,7 +193,6 @@ export default function App() {
 		return results;
 	};
 
-	// TODO: get the forecast weather 
 	const getForecastWeather = async (latitude: number, longitude: number) => {
 		const apiKey = process.env.REACT_APP_OPENWEATHER_KEY;
 		const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&appid=${apiKey}`;
@@ -221,6 +233,7 @@ export default function App() {
 								forecastData={forecastData}
 								weatherType={weatherType}
 								getCityByCoordinates={getCityByCoordinates}
+								currentLocationWeather={currentLocationWeather}
 								/>
 			</div>
 			<Footer />
