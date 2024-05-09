@@ -5,6 +5,7 @@ import { ILocationSearchProps } from "utils/interfaces/ILocationSearchProps";
 import { IWeatherResult } from "utils/interfaces/IWeatherResult";
 import WeatherResultCard from "./WeatherCard";
 import ForecastContainer from "./ForecastContainer";
+import { MoonLoader } from "react-spinners";
 
 export default function LocationSearch({ location, setLocation, fetchWeather, fetchForecast, getCityByCoordinates, weatherData, forecastData, weatherType, currentLocationWeather }: ILocationSearchProps) {
 
@@ -48,7 +49,8 @@ export default function LocationSearch({ location, setLocation, fetchWeather, fe
                     </div>
                 </div>
 
-                <div className="w-fit">
+                <div className="w-fit py-[20px]">
+                    <div className="mb-[8px]">Weather at the current location: </div>
                     <WeatherResultCard {...currentLocationWeather}/>
                 </div>
             </div>
