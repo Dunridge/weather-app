@@ -11,4 +11,5 @@ export interface ILocationSearchProps {
     weatherData: IWeatherResult[];
     forecastData: IForecastResult[];
     weatherType: WeatherType;
+    currentLocationWeather: IWeatherResult;
 }

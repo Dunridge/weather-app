@@ -14,18 +14,25 @@ export default function App() {
 	const [weatherData, setWeatherData] = useState<IWeatherResult[]>([]);
 	const [forecastData, setForecastData] = useState<IForecastResult[]>([]);
     const [weatherType, setWeatherType] = useState(WeatherType.CurrentWeather);
+	const [currentLocationWeather, setCurrentLocationWeather] = useState<IWeatherResult>({} as IWeatherResult);
 
 	useEffect(() => {
 		// const index = 94107; // TODO: test this with the city name
 		// fetchWeather(index);
-		test(); // this works and it accepts text for the city too 
+		runOnLoad(); // this works and it accepts text for the city too 
 	}, []);
 
-	const test = async () => {
+	useEffect(() => {
+		console.log(currentLocationWeather);
+		debugger;
+	}, [currentLocationWeather]);
+
+	const runOnLoad = async () => {
 		// getCityOrZipCoordinates(94107);
-		const latitude = 0;
-		const longitude = 0;
-		const city = await getCityByCoordinates(latitude, longitude);
+		// const latitude = 0;
+		// const longitude = 0;
+		// const city = await getCityByCoordinates(latitude, longitude);
+		fetchCurrentLocationWeather();
 		debugger;
 	};
 
@@ -53,6 +60,17 @@ export default function App() {
 		const weatherData: IWeatherResult[] = await getWeatherByIndexOrCity(index);
 		setWeatherData(weatherData);
 		setWeatherType(WeatherType.CurrentWeather);
+	};
+
+	const fetchCurrentLocationWeather = async () => {
+		
+		
+		const geoLocationIndex = 'San Francisco, CA'; // get the city and state only for specificity
+		
+		
+		const weatherData: IWeatherResult[] = await getWeatherByIndexOrCity(geoLocationIndex);
+		const currentLocation = weatherData[0];
+		setCurrentLocationWeather(currentLocation);
 	};
 
 	// TODO: test it with a city name to see if it works without modifications
@@ -221,6 +239,7 @@ export default function App() {
 								forecastData={forecastData}
 								weatherType={weatherType}
 								getCityByCoordinates={getCityByCoordinates}
+								currentLocationWeather={currentLocationWeather}
 								/>
 			</div>
 			<Footer />
